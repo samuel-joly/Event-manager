@@ -5,6 +5,8 @@ namespace App\Tests\Factory;
 use App\Entity\Event;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
+use function Zenstruck\Foundry\lazy;
+
 /**
  * @extends PersistentProxyObjectFactory<Event>
  */

@@ -12,8 +12,8 @@ class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        DefaultRoomsStory::load();
         DefaultEventsStory::load();
+        DefaultRoomsStory::load();
         DefaultSlotsStory::load();
     }
 }

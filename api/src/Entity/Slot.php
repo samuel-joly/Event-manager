@@ -14,7 +14,7 @@ class Slot
 {
     #[ORM\Column, ORM\Id, ORM\GeneratedValue]
     private ?int $id = null;
-    #[ORM\OneToOne(targetEntity: Room::class)]
+    #[ORM\ManyToOne(targetEntity: Room::class)]
     #[Assert\NotNull]
     public ?Room $room = null;
     #[ORM\ManyToOne(targetEntity: Event::class, inversedBy: 'slots')]

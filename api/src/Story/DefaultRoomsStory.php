@@ -9,6 +9,6 @@ final class DefaultRoomsStory extends Story
 {
     public function build(): void
     {
-        RoomFactory::createOne();
+        RoomFactory::createMany(11);
     }
 }
