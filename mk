@@ -51,29 +51,20 @@ case $1 in
     "db")
             case $2 in
                 "fixtures")
-                    shift
-                    case $2 in
-                        "load")
-                            $DOCK_PHP doctrine:fixtures:load
-                            ;;
-                    esac
+                    $DOCK_PHP doctrine:fixtures:load
                     ;;
                 "drop")
-                        ./mk db clear;
-                        ./mk db query "drop table reservation;drop table room; drop table login;"
+                    $DOCK_PHP doctrine:database:drop --force
                     ;;
-                "clear")
-                        ./mk db query "delete from reservation;delete from room; delete from login;"
+                "up")
+                    $DOCK_PHP doctrine:database:create
                     ;;
-                "query")
-                    shift
-                    if [[ $2 == "root" ]]; then
-                        docker exec $container sh -c "mysql -uroot -p$DB_PASSWORD -D $DB_NAME -e \"$3\"";
-                    else
-                        docker exec $container sh -c "mysql -u$DB_USER -p$DB_PASSWORD -D $DB_NAME -e \"$2\"";
-                    fi;
+                "refresh")
+                    ./mk db drop;
+                    ./mk db up;
+                    ./mk db migrate;
+                    ./mk db fixtures;
                     ;;
-
                 "migrate")
                     shift 2
                     $DOCK_PHP doctrine:migrations:migrate $@
