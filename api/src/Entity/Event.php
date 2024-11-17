@@ -43,4 +43,14 @@ class Event
     {
         return $this->id;
     }
+
+    public function getSlots(): ?iterable {
+        return $this->slots;
+    }
+
+    public function addSlot(Slot $slot): self {
+        $slot->setEvent($this);
+        $this->slots[] = $slot;
+        return $this;
+    }
 }

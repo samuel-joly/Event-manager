@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Factory;
+namespace App\Factory;
 
 use App\Entity\Slot;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
@@ -11,31 +11,19 @@ use function Zenstruck\Foundry\lazy;
  */
 final class SlotFactory extends PersistentProxyObjectFactory
 {
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
-     *
-     * @todo inject services if required
-     */
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public static function class(): string
     {
         return Slot::class;
     }
 
-    /**
-     * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#model-factories
-     *
-     * @todo add your default values here
-     */
     protected function defaults(): array|callable
     {
-        $attendees = self::faker()->numberBetween(5,18);
+        $attendees = self::faker()->numberBetween(5, 18);
         return [
-            'event' => lazy(fn() =>EventFactory::createOne()),
-            'room' => lazy(fn() =>RoomFactory::createOne()),
+            'event' => lazy(fn() => EventFactory::createOne()),
+            'room' => lazy(fn() => RoomFactory::createOne()),
             'afternoonCoffee' => self::faker()->numberBetween(0, $attendees),
             'attendees' => $attendees,
             'blocNote' => self::faker()->boolean(),
@@ -43,7 +31,7 @@ final class SlotFactory extends PersistentProxyObjectFactory
             'coktail' => self::faker()->numberBetween(1, $attendees),
             'configurationQuantity' => self::faker()->numberBetween(0, 4),
             'configurationSize' => self::faker()->numberBetween(1, $attendees),
-            'date' => \DateTimeImmutable::createFromMutable(self::faker()->dateTime()),
+            'date' => new \DateTime("2024-1-" . rand(1, 17)),
             'endHour' => self::faker()->time(),
             'glutenFree' => self::faker()->numberBetween(0, $attendees),
             'gomette' => self::faker()->boolean(),

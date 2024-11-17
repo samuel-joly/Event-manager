@@ -5,31 +5,33 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use App\Constraints\IsRoomFree;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource]
 #[ORM\Entity]
+#[IsRoomFree]
 class Slot
 {
     #[ORM\Column, ORM\Id, ORM\GeneratedValue]
     private ?int $id = null;
-    #[ORM\ManyToOne(targetEntity: Room::class)]
+    #[ORM\ManyToOne(targetEntity: Room::class, cascade:['persist','remove'])]
     #[Assert\NotNull]
     public ?Room $room = null;
-    #[ORM\ManyToOne(targetEntity: Event::class, inversedBy: 'slots')]
     #[Assert\NotNull]
+    #[ORM\ManyToOne(targetEntity: Event::class, inversedBy:'slots', cascade:['persist','remove'])]
     public ?Event $event = null;
-    #[ORM\Column]
+    #[ORM\Column(type: 'date')]
     #[Assert\NotNull]
-    public ?\DateTimeImmutable $date = null;
+    public ?\DateTime $date = null;
     #[ORM\Column(type: 'smallint')]
     #[Assert\NotNull]
     public ?int $attendees = null;
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column]
     #[Assert\NotBlank]
     public string $startHour = '';
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column]
     #[Assert\NotBlank]
     public string $endHour = '';
     #[ORM\Column(type: 'string')]
@@ -110,5 +112,11 @@ class Slot
     public function getId(): int
     {
         return $this->id;
+    }
+    public function setRoom(Room $room):void {
+        $this->room = $room;
+    }
+    public function setEvent(Event $event):void {
+        $this->event = $event;
     }
 }

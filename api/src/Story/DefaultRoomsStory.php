@@ -2,7 +2,7 @@
 
 namespace App\Story;
 
-use App\Tests\Factory\RoomFactory;
+use App\Factory\RoomFactory;
 use Zenstruck\Foundry\Story;
 
 final class DefaultRoomsStory extends Story

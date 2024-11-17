@@ -1,9 +1,12 @@
 #!/bin/bash
 set -a
-DOCK_PHP="docker compose exec php bin/console"
+DOCK_PHP="docker compose exec php "
+ROOT=$PWD
 
 help() {
     echo -e "\e[1;37mList of commands:\e[m";
+    echo -e "db \e[32mmigration\e[m up \t\t";
+    echo -e "db \e[32mmigration\e[m down \t\t";
     echo -e "db \e[32mmigrate\e[m\t\t Execute database migrations";
     echo -e "db \e[32mdiff\e[m\t\t create entity diff to api/migrations";
     echo -e "db \e[32mquery\e[m <string>\t Query sql";
@@ -12,8 +15,9 @@ help() {
     echo -e "docker \e[32mbuild\e[m\t\t docker compose build ";
     echo -e "docker \e[32mdown\e[m\t\t docker compose down";
     echo -e "docker \e[32mlogs\e[m\t\t docker compose logs -f";
+    echo -e "docker \e[32mrmall\e[m\t\t drop all container/volumes/images";
     echo "";
-    echo -e "test\t\t\t ";
+    echo -e "test\t\t\t bin/phpunit ";
     echo "";
 }
 
@@ -21,7 +25,7 @@ case $1 in
     "make")
         case $2 in
             "orm")
-                $DOCK_PHP make:entity --api-resource
+                $DOCK_PHP bin/console make:entity --api-resource
                 ;;
             esac
         ;;
@@ -42,8 +46,25 @@ case $1 in
                 shift 2
                 docker compose down $@
                 ;;
+            "remake")
+                shift 2
+                docker compose down $@
+                docker container rm $(docker container ls -qa | grep $ROOT)
+                docker image rm $(docker image ls -qa)
+                docker volume rm $(docker volume ls )
+                ;;
             *)
                 help;
+                ;;
+        esac
+        ;;
+    "migration")
+        case $2 in
+            "down")
+                exa --no-user --no-permissions --no-time --no-filesize --oneline $ROOT/api/migrations | fzf --layout reverse --preview-window=right:80% --preview="bat -l PHP --color=always $ROOT/api/migrations/{1}" --bind "enter:become($DOCK_PHP bin/console doctrine:migrations:execute $ROOT/api/migrations/{1})"
+                ;;
+            "up")
+                $DOCK_PHP bin/console doctrine:migrations:migrate $@
                 ;;
         esac
         ;;
@@ -51,13 +72,13 @@ case $1 in
     "db")
             case $2 in
                 "fixtures")
-                    $DOCK_PHP doctrine:fixtures:load
+                    $DOCK_PHP bin/console doctrine:fixtures:load
                     ;;
                 "drop")
-                    $DOCK_PHP doctrine:database:drop --force
+                    $DOCK_PHP bin/console doctrine:database:drop --force
                     ;;
                 "up")
-                    $DOCK_PHP doctrine:database:create
+                    $DOCK_PHP bin/console doctrine:database:create
                     ;;
                 "refresh")
                     ./mk db drop;
@@ -67,11 +88,11 @@ case $1 in
                     ;;
                 "migrate")
                     shift 2
-                    $DOCK_PHP doctrine:migrations:migrate $@
+                    $DOCK_PHP bin/console doctrine:migrations:migrate $@
                     ;;
 
                 "diff")
-                    $DOCK_PHP doctrine:migrations:diff
+                    $DOCK_PHP bin/console doctrine:migrations:diff
                     ;;
 
                 *)
@@ -81,6 +102,7 @@ case $1 in
         ;;
 
     "test")
+        $DOCK_PHP bin/phpunit
         ;;
 
     *)

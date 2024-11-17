@@ -2,9 +2,9 @@
 
 namespace App\Story;
 
-use App\Tests\Factory\EventFactory;
-use App\Tests\Factory\RoomFactory;
-use App\Tests\Factory\SlotFactory;
+use App\Factory\EventFactory;
+use App\Factory\RoomFactory;
+use App\Factory\SlotFactory;
 use Zenstruck\Foundry\Story;
 
 final class DefaultSlotsStory extends Story
@@ -12,11 +12,11 @@ final class DefaultSlotsStory extends Story
     public function build(): void
     {
         SlotFactory::createMany(
-            20,
+            90,
             function () {
                 return [
-                    'event' => EventFactory::random(),
-                    'room' => RoomFactory::random()
+                    'event' => EventFactory::randomOrCreate(),
+                    'room' => RoomFactory::randomOrCreate()
                 ];
             }
         );
