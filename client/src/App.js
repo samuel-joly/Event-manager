@@ -1,11 +1,7 @@
-import { HydraAdmin, hydraDataProvider } from '@api-platform/admin';
+import logo from './logo.svg';
+import './App.css';
 
-const entrypoint = "https://localhost" ;
-export default () => <HydraAdmin dataProvider={hydraDataProvider({entrypoint, useEmbedded: false})} entrypoint={entrypoint}/>;
-/**
-  import logo from './logo.svg';
-  import './App.css';
-  function App() {
+function App() {
   return (
     <div className="App">
       <header className="App-header">
@@ -27,4 +23,3 @@ export default () => <HydraAdmin dataProvider={hydraDataProvider({entrypoint, us
 }
 
 export default App;
-**/

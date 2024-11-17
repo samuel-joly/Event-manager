@@ -5,3 +5,4 @@
 .config.sess
 .admin.sess
 .api.sess
+.client.sess
