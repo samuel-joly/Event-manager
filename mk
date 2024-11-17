@@ -15,7 +15,7 @@ help() {
     echo -e "docker \e[32mbuild\e[m\t\t docker compose build ";
     echo -e "docker \e[32mdown\e[m\t\t docker compose down";
     echo -e "docker \e[32mlogs\e[m\t\t docker compose logs -f";
-    echo -e "docker \e[32mrmall\e[m\t\t drop all container/volumes/images";
+    echo -e "docker \e[32mremake\e[m\t\t drop all container/volumes/images";
     echo "";
     echo -e "test\t\t\t bin/phpunit ";
     echo "";
@@ -51,7 +51,8 @@ case $1 in
                 docker compose down $@
                 docker container rm $(docker container ls -qa | grep $ROOT)
                 docker image rm $(docker image ls -qa)
-                docker volume rm $(docker volume ls )
+                docker volume rm $(docker volume ls -q )
+                docker compose up $@
                 ;;
             *)
                 help;
@@ -99,6 +100,21 @@ case $1 in
                     help
                     ;;
             esac
+        ;;
+    "react")
+        shift 1
+        case $1 in
+            "start")
+                cd my-admin
+                npm start &
+                cd ..
+                ;;
+            "stop")
+                ;;
+            *)
+                help
+                ;;
+        esac
         ;;
 
     "test")
